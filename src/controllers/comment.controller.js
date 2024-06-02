@@ -1,15 +1,13 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, isValidObjectId } from "mongoose";
 import { Comment } from "../models/comment.model.js";
 import { Video } from "../models/video.model.js";
 import { Like } from "../models/like.model.js";
-import ApiError from "../utils/apiError.js";
+import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
-// Utility function to validate ObjectId
-const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
-// Get all comments for a video
+//! Get all comments for a video
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
   const { videoId } = req.params;
@@ -69,7 +67,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, comments, "Comments fetched successfully"));
 });
 
-// Add a comment to a video
+//! Add a comment to a video
 const addComment = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   const { content } = req.body;
@@ -98,7 +96,7 @@ const addComment = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, comment, "Comment added successfully"));
 });
 
-// Update a comment
+//! Update a comment
 const updateComment = asyncHandler(async (req, res) => {
   // TODO: add a comment to a video
 
@@ -130,7 +128,7 @@ const updateComment = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatedComment, "Comment edited successfully"));
 });
 
-//Delete a comment
+//! Delete a comment
 const deleteComment = asyncHandler(async (req, res) => {
   // TODO: delete a comment
   const { commentId } = req.params;
