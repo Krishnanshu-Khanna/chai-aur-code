@@ -62,7 +62,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
   const options = { page: parseInt(page, 10), limit: parseInt(limit, 10) };
   const comments = await Comment.aggregatePaginate(commentsAggregate, options);
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, comments, "Comments fetched successfully"));
 });
@@ -91,7 +91,7 @@ const addComment = asyncHandler(async (req, res) => {
     owner: req.user?._id,
   });
 
-  res
+  return res
     .status(201)
     .json(new ApiResponse(201, comment, "Comment added successfully"));
 });
@@ -123,7 +123,7 @@ const updateComment = asyncHandler(async (req, res) => {
   comment.content = content;
   const updatedComment = await comment.save();
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, updatedComment, "Comment edited successfully"));
 });
@@ -149,7 +149,7 @@ const deleteComment = asyncHandler(async (req, res) => {
   await comment.remove();
   await Like.deleteMany({ comment: commentId });
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, { commentId }, "Comment deleted successfully"));
 });
