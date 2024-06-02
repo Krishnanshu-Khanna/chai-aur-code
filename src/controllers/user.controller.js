@@ -3,8 +3,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import jwt from "jsonwebtoken";
 
-3
 //?GENERATE ACCESS AND REFRESH TOKENS
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
@@ -175,7 +175,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     req.user._id,
     {
       $unset: {
-        refreshToken: 1, // this removes the field from document
+        refreshToken: 1, // this removes the field from document  or can use $set: {refreshToken: null}
       },
     },
     {
