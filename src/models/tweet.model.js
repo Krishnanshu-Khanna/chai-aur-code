@@ -14,4 +14,19 @@ const tweetSchema = new Schema(
   { timestamps: true }
 );
 
+// // Add a pre-save hook
+// tweetSchema.pre("save", function (next) {
+//   if (!this.content) {
+//     return next(new Error("Content is required"));
+//   }
+
+//   this.content = this.content.trim();
+
+//   if (this.content.length === 0) {
+//     return next(new Error("Content cannot be empty"));
+//   }
+
+//   next();
+// });
+
 export const Tweet = mongoose.model("Tweet", tweetSchema);

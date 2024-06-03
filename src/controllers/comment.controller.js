@@ -6,7 +6,6 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
-
 //! Get all comments for a video
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
@@ -91,6 +90,10 @@ const addComment = asyncHandler(async (req, res) => {
     owner: req.user?._id,
   });
 
+  if (!comment) {
+    throw new ApiError(500, "Failed to add comment please try again");
+  }
+
   return res
     .status(201)
     .json(new ApiResponse(201, comment, "Comment added successfully"));
@@ -120,8 +123,19 @@ const updateComment = asyncHandler(async (req, res) => {
     throw new ApiError(403, "Only the comment owner can edit their comment");
   }
 
-  comment.content = content;
-  const updatedComment = await comment.save();
+  const updatedComment = await Comment.findByIdAndUpdate(
+    comment?._id,
+    {
+      $set: {
+        content,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedComment) {
+    throw new ApiError(500, "Failed to edit comment please try again");
+  }
 
   return res
     .status(200)
@@ -146,8 +160,8 @@ const deleteComment = asyncHandler(async (req, res) => {
     throw new ApiError(403, "Only the comment owner can delete their comment");
   }
 
-  await comment.remove();
-  await Like.deleteMany({ comment: commentId });
+  await Comment.findByIdAndDelete(commentId);
+  await Like.deleteMany({ comment: commentId, likedBy: req.user?._id });
 
   return res
     .status(200)
